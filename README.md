@@ -1,6 +1,6 @@
 # OnlyTrust Demo Agent
 
-A working OnlyTrust AI Agent that powers the live demo at [onlytrust.ai/demo](https://onlytrust.ai/demo). Fork this repo to build your own agent.
+A working OnlyTrust AI Agent that powers the live demo at [app.onlytrust.ai/demo](https://app.onlytrust.ai/demo). Fork this repo to build your own agent.
 
 ## What this agent does
 
