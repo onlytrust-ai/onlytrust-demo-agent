@@ -1,4 +1,6 @@
 {
+  "buildCommand": "tsc --noEmit",
+  "outputDirectory": ".",
   "functions": {
     "api/webhook.ts": {
       "maxDuration": 30
