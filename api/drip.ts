@@ -30,7 +30,11 @@ export default async function handler(
   }
 
   const privateKey = process.env.DRIP_WALLET_PRIVATE_KEY;
-  const rpcUrl = process.env.DRIP_RPC_URL || 'https://sepolia.base.org';
+  const rpcUrls = (
+    process.env.DRIP_RPC_URL || 'https://sepolia.base.org'
+  )
+    .split(',')
+    .concat('https://base-sepolia-rpc.publicnode.com');
   const usdcAddress =
     process.env.DRIP_USDC_CONTRACT ||
     '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
@@ -40,9 +44,31 @@ export default async function handler(
     return res.status(503).json({ error: 'Drip not configured' });
   }
 
+  // Try each RPC until one works (public endpoints are unreliable)
+  let provider: ethers.JsonRpcProvider | null = null;
+  let wallet: ethers.Wallet | null = null;
+  let lastRpcError: string = '';
+
+  for (const rpcUrl of rpcUrls) {
+    try {
+      const p = new ethers.JsonRpcProvider(rpcUrl.trim());
+      const w = new ethers.Wallet(privateKey, p);
+      // Quick connectivity check
+      await p.getBlockNumber();
+      provider = p;
+      wallet = w;
+      break;
+    } catch (e) {
+      lastRpcError = e instanceof Error ? e.message : String(e);
+      continue;
+    }
+  }
+
+  if (!provider || !wallet) {
+    return res.status(503).json({ error: 'All RPCs failed: ' + lastRpcError });
+  }
+
   try {
-    const provider = new ethers.JsonRpcProvider(rpcUrl);
-    const wallet = new ethers.Wallet(privateKey, provider);
     const usdc = new ethers.Contract(usdcAddress, ERC20_ABI, wallet);
 
     // Check drip wallet balance first
