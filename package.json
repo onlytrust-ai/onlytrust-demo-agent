@@ -1,0 +1,21 @@
+{
+  "name": "onlytrust-demo-agent",
+  "version": "1.0.0",
+  "description": "Reference OnlyTrust AI Agent -- powers the live demo at onlytrust.ai/demo",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "dev": "vercel dev --listen 3002",
+    "build": "tsc --noEmit",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "ethers": "^6.13.0",
+    "groq-sdk": "^0.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vercel/node": "^5.0.0",
+    "typescript": "^5.5.0"
+  }
+}

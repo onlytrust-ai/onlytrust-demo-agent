@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/webhook.ts": {
+      "maxDuration": 30
+    },
+    "api/drip.ts": {
+      "maxDuration": 10
+    }
+  }
+}
