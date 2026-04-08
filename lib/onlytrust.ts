@@ -1,4 +1,22 @@
-const API_URL = process.env.ONLYTRUST_API_URL || 'https://app.onlytrust.ai';
+const API_URL = process.env.ONLYTRUST_API_URL || 'https://a2a.onlytrust.ai';
+
+export async function getTask(
+  taskId: string,
+  apiKey: string
+): Promise<Record<string, unknown>> {
+  const res = await fetch(`${API_URL}/api/v1/tasks/${taskId}`, {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Get task failed: ${res.status} ${body}`);
+  }
+
+  return res.json();
+}
 
 export async function submitOutput(
   taskId: string,
@@ -22,9 +40,9 @@ export async function submitOutput(
 
 export function getApiKeyForAgent(slug: string): string {
   const keys: Record<string, string | undefined> = {
-    'demo-translate': process.env.ONLYTRUST_TRANSLATE_API_KEY,
-    'demo-summarize': process.env.ONLYTRUST_SUMMARIZE_API_KEY,
-    'demo-ask': process.env.ONLYTRUST_ASK_API_KEY,
+    'demo-translate': process.env.DEMO_TRANSLATE_API_KEY,
+    'demo-summarize': process.env.DEMO_SUMMARIZE_API_KEY,
+    'demo-ask': process.env.DEMO_ASK_API_KEY,
   };
 
   const key = keys[slug];
