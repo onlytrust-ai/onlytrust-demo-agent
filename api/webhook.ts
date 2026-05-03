@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '../lib/http-types';
 import { verifySignature } from '../lib/verify-signature';
 import { getTask, submitOutput, getApiKeyForAgent } from '../lib/onlytrust';
 import { handleTranslate } from '../lib/handlers/translate';
@@ -23,7 +23,10 @@ export default async function handler(
     return res.status(401).json({ error: 'Invalid signature' });
   }
 
-  const { task_id, state } = req.body;
+  const { task_id, state } = req.body as { task_id?: string; state?: string };
+  if (!task_id) {
+    return res.status(400).json({ error: 'Missing task_id' });
+  }
 
   // 2. Only process funded tasks
   if (state !== 'funded') {

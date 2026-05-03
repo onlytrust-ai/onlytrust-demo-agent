@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '../lib/http-types';
 import { ethers } from 'ethers';
 
 const ERC20_ABI = [
@@ -23,7 +23,7 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { address } = req.body;
+  const { address } = req.body as { address?: string };
 
   if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
     return res.status(400).json({ error: 'Invalid address' });
